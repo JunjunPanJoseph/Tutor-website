@@ -1,0 +1,72 @@
+<script>
+    //var dict = {}
+    function editDisplay(className, displayVal){
+        const elem = document.getElementsByTagName("*");
+        for (let i = 0; i < elem.length; i++) {
+			if (elem[i].className.indexOf(className) != -1) {
+				elem[i].style.display = displayVal;
+			}
+		}
+    }
+    function checkAnswer() {
+        editDisplay('answer', 'flex');
+        editDisplay('commit', 'flex');
+        /*
+        const elem = document.getElementsByTagName("div");
+        const questionList = Array();
+        for (let i = 0; i < elem.length; i++) {
+			if (elem[i].className.indexOf("question") != -1) {
+				questionList.push(elem[i]);
+			}
+		}
+		for (let i = 0; i < questionList.length; i++){
+		    let currElement = elem[i];
+		    let currChildren = currElement.children;
+		    for (let j = 0; j < currChildren.length; j++){
+                if(currChildren[i].className.indexOf("question_mc_choice") != -1){
+                    // Choice
+
+                }
+            }
+        }
+		*/
+    }
+    function chearInput() {
+        editDisplay('answer', 'none');
+        editDisplay('commit', 'none');
+    }
+</script>
+
+<hr>
+{% for question in data.questions %}
+    <div class="question">
+        {{ question.qid }}. {{ question.description | safe }}
+        <br>
+        {{ question.question | safe }}
+        <br>
+        <!--{{ question.__class__.__name__ }}-->
+        {% if question.__class__.__name__ == 'QuestionMultipleChoice' %}
+            {% for choice in question.get_choices() %}
+                <div class="question_mc_choice">
+                    {{ choice['cid'] }}. {{ choice['text'] | safe}}
+                    <input type="checkbox" name="Q{{ question.qid }}" value="{{ choice['cid'] }}">
+                    <div class="answer" style="display: none">{{ choice['answer'] }}</div>
+                    <div class="commit" style="display: none">{{ choice['commit'] }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if question.__class__.__name__ == 'QuestionTextfield' %}
+            {% for textfield in question.get_fields() %}
+                <div class="question_tf_field">
+                    {{ textfield['tid'] }}. {{ textfield['text'] | safe}}
+                    <input type="text" class="form-control" id="Q{{ question.qid }}F{{ textfield['tid'] }}" placeholder={{ textfield['defaultText'] }}>
+                    <div class="answer" style="display: none">{{ textfield['answer'] }}</div>
+                    <div class="commit" style="display: none">{{ textfield['commit'] }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <hr>
+    </div>
+{% endfor %}
+
+<button onclick="chearInput()"> clear </button> <button type="submit">submit</button> <button onclick="checkAnswer()">Check Answer</button>

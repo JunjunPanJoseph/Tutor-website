@@ -1,0 +1,170 @@
+﻿{% block doc -%}
+<!DOCTYPE html>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<html{% block html_attribs %}{% endblock html_attribs %}>
+    {%- block html %}
+    <head>
+        {%- block head %}
+        <title>{% block title %}{% endblock title %}</title>
+        {%- block metas %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {%- endblock metas %}
+        <!--Bootstrap-->
+        <link href="{{ bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap') }}" rel="stylesheet">
+        <!--Other css-->
+        <style>
+            .warpper {
+                width: 100%;
+                max-width: 1260px;
+                min-width: 755px;
+                margin: 0 auto;
+                overflow: hidden
+            }
+
+            .header_img_box {
+                position: relative;
+                z-index: 199;
+                height: 170px;
+                margin-top: -30px;
+                background: #eee;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+            .imgWH img {
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .logo {
+                position: absolute;
+                width: 220px;
+                height: 105px;
+                left: 24px;
+                top: 55px;
+                background: transparent no-repeat 0;
+                z-index: 10;
+            }
+        </style>
+        <!-- Header image -->
+        <div class="header_img_box" style="background-image:url({{ url_for('static', filename=data.getHeader().getBackgroundURL()) }});">
+            <a href="/" class="logo" style="background-image:url({{ url_for('static', filename=data.getHeader().getLogoURL()) }});"></a>
+        </div>
+        {%- endblock head %}
+    </head>
+    <body{% block body_attribs %}{% endblock body_attribs %}>
+        {% block body -%}
+        <nav class="navbar navbar-inverse">
+            <div class="warpper">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">首页</a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" title="尚未完成">铃のBlog</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" title="尚未完成">视频</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" title="尚未完成">资源</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" title="尚未完成">注册</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" title="尚未完成">登录</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="warpper">
+            {% block content -%}
+            {%- endblock content %}
+            <br />
+            <div class="col">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    {{ data.getLeftRow().getTitle() }}
+                                </h3>
+                            </div>
+                            <div class="panel-body" style="padding: 0;">
+                                {% for composite in data.getLeftRow().getContent() %}
+                                <div class="panel panel-default" style="margin: 0;">
+                                    {% if composite.isLeaf() == false %}
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion"
+                                               href="#{{composite.getName()}}">
+                                                {{composite.getName()}}
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="{{composite.getName()}}" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            {% for child in composite.getChildren() %}
+                                            <div id="{{child.getID()}}" onclick="" style="cursor: pointer;">{{child.getName()}}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="{{composite.getURL()}}"> {{composite.getName()}} </a>
+                                        </h4>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        {% block display_rightRow -%}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title" id="baseContent_title">
+                                    内容标题
+                                </h3>
+                            </div>
+                            <div class="panel-body" id="baseContent_content">
+                                我是课程内容<br />
+                                我是第一行<br />
+                                我是第二行<br />
+                                我是第三行<br />
+                                我是第三行<br />
+                                我是第三行<br />
+                                我是第三行<br />
+                                我是第三行<br />
+                                我是第三行<br />
+                            </div>
+                        </div>
+                        {%- endblock display_rightRow -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block scripts %}
+        <script src="{{ bootstrap_find_resource('jquery.js', cdn='jquery') }}"></script>
+        <script src="{{ bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap') }}"></script>
+        {%- endblock scripts %}
+        {%- endblock body %}
+        </body>
+        {%- endblock html %}
+        </html>
+        {% endblock doc -%}
