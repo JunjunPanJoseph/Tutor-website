@@ -1,2 +1,2 @@
 # Tutor-website
-A website for tutor to find students. (Not finished)
+A website that allows tutors to find students. (Not completed)
